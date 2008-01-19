@@ -22,27 +22,27 @@
    <!-- Event types -->
   
     <kss:eventtype
-        name="jdnd-drop"
+        name="yuidnd-drop"
         jsfile="javascript/kss_dragdrop.js"
         />
   
     <kss:eventtype
-        name="jdnd-drag"
+        name="yuidnd-drag"
         jsfile="javascript/kss_dragdrop.js"
         />
   
     <kss:eventtype
-        name="jdnd-start"
+        name="yuidnd-start"
         jsfile="javascript/kss_dragdrop.js"
         />
   
     <kss:eventtype
-        name="jdnd-end"
+        name="yuidnd-end"
         jsfile="javascript/kss_dragdrop.js"
         />
   
     <kss:eventtype
-        name="jdnd-hover"
+        name="yuidnd-hover"
         jsfile="javascript/kss_dragdrop.js"
         />
 
@@ -50,7 +50,7 @@
     <!-- Client actions & commands -->
 
     <kss:action
-        name="jdnd-resetPosition"
+        name="yuidnd-resetPosition"
         jsfile="javascript/kss_dragdrop.js"
         command_factory="selector"
         params_mandatory=""
