@@ -1,0 +1,51 @@
+<html tal:define="viewname string:kss_yuidnd_sortables_demo">
+  <head>
+
+    <script src="++resource++yahoo.js" type="text/javascript"></script>
+    <script src="++resource++dom.js" type="text/javascript"></script>
+    <script src="++resource++event.js" type="text/javascript"></script>
+    <script src="++resource++animation.js" type="text/javascript"></script>
+    <script src="++resource++dragdrop.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css"
+          tal:attributes="href string:${context/@@absolute_url}/++resource++kss_yuidnd_demo.css"/>
+
+    <metal:header use-macro="context/@@header_macros/header_resources" />
+
+    
+  </head>
+  <body>
+    <p metal:use-macro="context/@@body_macros/header">header</p>
+    <!-- START of demo content -->
+
+    <h2>Drag and drop demo: Sortables</h2>
+
+    <div id="content">
+    <div style="height:200px;">
+    <div style="float:left;">
+    <h3>This is the first list</h3>
+     <ul class="draggable-container" id="firstlist" style="height:150px;width:200px;">
+       <li class="draggable-green" id="firstlist_firstlist1">Item 1 from first list.</li>
+       <li class="draggable-green" id="firstlist_firstlist2">Item 2 from first list.</li>
+       <li class="draggable-green" id="firstlist_firstlist3">Item 3 from first list.</li>
+     </ul>
+    </div>
+     <div style="float:left;">
+     <h3>And now the second list</h3>
+     <ul class="draggable-container" id="secondlist" style="height:150px;width:200px;">
+       <li class="draggable-orange" id="secondlist_secondlist1">
+         <span class="handle">DRAG HERE</span> Item 1 from second list.
+       </li>
+       <li class="draggable-orange" id="secondlist_secondlist2">
+         <span class="handle">DRAG HERE</span> Item 2 from second list.
+       </li>
+       <li class="draggable-orange" id="secondlist_secondlist3">
+         <span class="handle">DRAG HERE</span> Item 3 from second list.
+       </li>
+     </ul>
+    </div>
+    </div>
+    </div>
+
+
+  </body>
+</html>

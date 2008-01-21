@@ -11,15 +11,34 @@
     <!-- Include demo setup conditionally -->
     <include zcml:condition="installed kss.demo" package=".demo" />
 
-    <!-- Third party library dependencies 
+    <!-- Third party library dependencies -->
 
     <browser:resource
-        file="3rd_party/jquery.js"
-        name="jquery.js"
+        file="3rd_party/yahoo.js"
+        name="yahoo.js"
         />
-    -->
 
-   <!-- Event types 
+    <browser:resource
+        file="3rd_party/dom.js"
+        name="dom.js"
+        />
+
+    <browser:resource
+        file="3rd_party/event.js"
+        name="event.js"
+        />
+
+    <browser:resource
+        file="3rd_party/animation.js"
+        name="animation.js"
+        />
+
+    <browser:resource
+        file="3rd_party/dragdrop.js"
+        name="dragdrop.js"
+        />
+
+   <!-- Event types -->
   
     <kss:eventtype
         name="yuidnd-drop"
@@ -27,27 +46,22 @@
         />
   
     <kss:eventtype
-        name="yuidnd-drag"
+        name="yuidnd-dragstart"
         jsfile="javascript/kss_dragdrop.js"
         />
   
     <kss:eventtype
-        name="yuidnd-start"
+        name="yuidnd-dragsuccess"
         jsfile="javascript/kss_dragdrop.js"
         />
   
     <kss:eventtype
-        name="yuidnd-end"
+        name="yuidnd-dragfailure"
         jsfile="javascript/kss_dragdrop.js"
         />
   
-    <kss:eventtype
-        name="yuidnd-hover"
-        jsfile="javascript/kss_dragdrop.js"
-        />
-    -->
 
-    <!-- Client actions & commands
+    <!-- Client actions & commands -->
 
     <kss:action
         name="yuidnd-resetPosition"
@@ -56,7 +70,7 @@
         params_mandatory=""
         params_optional=""
         />
-    -->
+
 
     <!-- Command sets -->
 

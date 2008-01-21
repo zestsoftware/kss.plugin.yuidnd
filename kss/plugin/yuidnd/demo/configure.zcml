@@ -1,11 +1,54 @@
 <configure xmlns="http://namespaces.zope.org/zope"
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:kss="http://namespaces.zope.org/kss"
-                   i18n_domain="kss"
-                   >
+		   i18n_domain="kss"
+		   >
 
   <!--
     Set up the demos
   -->
 
+  <!-- Set up the demo utility, needed for registration -->
+  <utility
+    name="yuidnd"
+    factory=".zopeconfig.KSSDemos"
+    provides="kss.demo.interfaces.IKSSDemoResource"
+    permission="zope.Public"
+    />
+
+  <!-- Set up resources needed for the demo -->
+  <!--
+  <browser:page
+      for="kss.demo.interfaces.ISimpleContent"
+      template="kss_yuidnd_demo.pt"
+      name="kss_yuidnd_demo.html"
+      permission="zope.View"
+      />
+
+  <browser:resource
+    file="kss_yuidnd_demo.kss"
+    name="kss_yuidnd_demo.kss"
+    />
+
+  <browser:resource
+    file="kss_yuidnd_demo.css"
+    name="kss_yuidnd_demo.css"
+    />
+
+  -->
+
+  <browser:page
+      for="kss.demo.interfaces.ISimpleContent"
+      template="kss_yuidnd_orderable_demo.pt"
+      name="kss_yuidnd_orderable_demo.html"
+      permission="zope.View"
+      />
+
+  <browser:resource
+    file="kss_yuidnd_orderable_demo.kss"
+    name="kss_yuidnd_orderable_demo.kss"
+    />
+
+
 </configure>
+
