@@ -23,14 +23,12 @@ class KSSDemos(object):
     demos = (
         # List your demos here. 
         # (Second parameter can be a subcategory within the demo if needed.)
-        KSSDemo('sdnd', '', 'kss_sdnd_demo.html', 'Scriptaculous drag and drop Draggables'),
-        KSSDemo('sdnd', '', 'kss_sdnd_sortables_demo.html', 'Scriptaculous drag and drop Sortables'),
-
+        KSSDemo('yuidnd', '', 'kss_yuidnd_orderable_demo.html', 'Yahoo UI Library drag and drop Draggables'),
         )
 
     # directories are relative from the location of this .py file
     selenium_tests = (
         # if you only have one test directory, you
         # need not change anything here.
-        KSSSeleniumTestDirectory('selenium_tests'),
+        #KSSSeleniumTestDirectory('selenium_tests'),
         )

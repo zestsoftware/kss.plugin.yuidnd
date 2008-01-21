@@ -1,4 +1,4 @@
-<html tal:define="viewname string:kss_yuidnd_sortables_demo">
+<html tal:define="viewname string:kss_yuidnd_orderable_demo">
   <head>
 
     <script src="++resource++yahoo.js" type="text/javascript"></script>
@@ -7,7 +7,7 @@
     <script src="++resource++animation.js" type="text/javascript"></script>
     <script src="++resource++dragdrop.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css"
-          tal:attributes="href string:${context/@@absolute_url}/++resource++kss_yuidnd_demo.css"/>
+          tal:attributes="href string:${context/@@absolute_url}/++resource++kss_yuidnd_orderable_demo.css"/>
 
     <metal:header use-macro="context/@@header_macros/header_resources" />
 
