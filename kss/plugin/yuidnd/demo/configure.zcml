@@ -8,13 +8,13 @@
     Set up the demos
   -->
 
-  <!-- Set up the demo utility, needed for registration -->
+  <!-- Set up the demo utility, needed for registration
   <utility
     name="yuidnd"
     factory=".zopeconfig.KSSDemos"
     provides="kss.demo.interfaces.IKSSDemoResource"
     permission="zope.Public"
-    />
+    />-->
 
   <!-- Set up resources needed for the demo -->
   <!--
