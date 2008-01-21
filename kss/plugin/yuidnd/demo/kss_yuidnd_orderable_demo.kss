@@ -2,18 +2,18 @@
  */
 
 #firstlist li:yuidnd-dragstart {
-    evt-yuidnd-dragstart-targetIds: first,second;
+    evt-yuidnd-dragstart-targetIds: 'first,second';
 }
 
-#secondlist li:yuidnd-dragstart; {
+#secondlist li:yuidnd-dragstart {
     evt-yuidnd-dragstart-targetIds: second;
 }
 
-#firstlist:yuidnd-drop(first); {
+#firstlist:yuidnd-drop(first) {
     evt-yuidnd-drop-action: 'order';
 }
 
-#secondlist:yuidnd-drop(second); {
+#secondlist:yuidnd-drop(second) {
     evt-yuidnd-drop-action: 'order';
 }
 
