@@ -142,7 +142,8 @@ if (kukit.yuidnd.base_library_present) {
     };
 
     Droppable.prototype.continueDropEvent =
-            function continueDropEvent(el, targetel, before) {
+            function continueDropEvent(el, targetel, before,
+                                       executableAction) {
         /* actually handle the drop
 
             this is done here rather than on the Draggable because we know
@@ -153,6 +154,7 @@ if (kukit.yuidnd.base_library_present) {
         };
         var droppable = this.getEl();
         droppable.isEmpty = false;
+        var parms = {};
         if (this.config.action == 'order') {
             if (targetel) {
                 if (before) {
@@ -168,12 +170,18 @@ if (kukit.yuidnd.base_library_present) {
             } else {
                 droppable.appendChild(el);
             };
+            if (this.config.action == 'order') {
+                parms['dropContainerId'] = droppable.id;
+                parms['dropIndex'] = array_indexOf(droppable, el);
+            };
         } else if (this.config.action == 'discard') {
             el.parentNode.removeChild(el);
         } else if (this.config.action == 'fill') {
             dom_replaceContent(droppable, el);
         };
-        // perform KSS actions
+        if (executableAction) {
+            executableAction({defaultParameters: parms});
+        };
     };
 
     var Draggable = kukit.yuidnd.Draggable = function Draggable() {
@@ -265,8 +273,9 @@ if (kukit.yuidnd.base_library_present) {
         if (ddm.interactionInfo.drop.length == 1) {
             var point = ddm.interactionInfo.point;
             var region = ddm.interactionInfo.sourceRegion;
-            var droppable = ddm.getDDById(id);
+            var sourceel = this.getEl();
             var dropel = Dom.get(id);
+            var droppable = ddm.getDDById(id);
             var targetel = dom_getLastElement(dropel);
             var before = false;
             if (this.place_info) {
@@ -276,12 +285,10 @@ if (kukit.yuidnd.base_library_present) {
             };
             if (!region.intersect(point)) {
                 var destel = Dom.get(id);
-                droppable.continueDropEvent(this.getEl(), targetel, before);
+                droppable.continueDropEvent(sourceel, targetel, before,
+                                            this.config.dragSuccessAction);
                 ddm.refreshCache();
             };
-        };
-        if (this.config.dragSuccessAction) {
-            this.config.dragSuccessAction();
         };
     };
 

@@ -12,6 +12,7 @@
 #firstlist li:yuidnd-dragsuccess,
 #secondlist li:yuidnd-dragsuccess {
     action-client: log;
+    log-message: pass(dropIndex);
 }
 
 #firstlist:yuidnd-drop(first) {
