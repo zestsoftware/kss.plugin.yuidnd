@@ -49,8 +49,6 @@ if (kukit.yuidnd.base_library_present) {
 
             returns -1 if 'needle' couldn't be found
         */
-        kukit.log(haystack);
-        kukit.log(needle);
         for (var i=0; i < haystack.length; i++) {
             if ((obj_equality && needle === haystack[i]) ||
                     !obj_equality && needle == haystack[i]) {
@@ -174,8 +172,6 @@ if (kukit.yuidnd.base_library_present) {
         droppable.isEmpty = false;
         if (this.config.action == 'order') {
             if (targetel) {
-                kukit.log('el: ' + el);
-                kukit.log('targetel: ' + targetel);
                 if (before) {
                     targetel.parentNode.insertBefore(el, targetel);
                 } else {
@@ -214,6 +210,7 @@ if (kukit.yuidnd.base_library_present) {
             return;
         };
         Draggable.superclass.constructor.call(this, id, group, config);
+        this.config = config;
         this.isTarget = false;
         el.__draggable = true;
         this.goingUp = false;
@@ -386,7 +383,6 @@ if (kukit.yuidnd.base_library_present) {
 
     DnDEventBinder.prototype.__bind_drag__ =
             function __bind_drag__(opers_by_eventname) {
-
         var groups = [];
         var config = {
             action: 'ghost',
@@ -429,7 +425,8 @@ if (kukit.yuidnd.base_library_present) {
             if (bindoper.hasExecuteActions()) {
                 config.dragStartAction = bindoper.makeExecuteActionsHook();
             };
-        } else if (opers_by_eventname.dragsuccess) {
+        };
+        if (opers_by_eventname.dragsuccess) {
             var bindoper = opers_by_eventname.dragsuccess;
             node = bindoper.node;
             if (!node || !node.id) {
@@ -440,7 +437,8 @@ if (kukit.yuidnd.base_library_present) {
             if (bindoper.hasExecuteActions()) {
                 config.dragSuccessAction = bindoper.makeExecuteActionsHook();
             };
-        } else if (opers_by_eventname.dragfailure) {
+        };
+        if (opers_by_eventname.dragfailure) {
             var bindoper = opers_by_eventname.dragfailure;
             node = bindoper.node;
             if (!node || !node.id) {
@@ -452,8 +450,7 @@ if (kukit.yuidnd.base_library_present) {
                 config.dragFailureAction = bindoper.makeExecuteActionsHook();
             };
         };
-        // XXX does this.id exist?
-        var maingroup = this.id || 'default';
+        var maingroup = this.__binderId__ || 'default';
         var instance = new Draggable(node.id, maingroup, config);
         for (var i=0; i < groups.length; i++) {
             instance.addToGroup(groups[i]);
@@ -493,8 +490,7 @@ if (kukit.yuidnd.base_library_present) {
         if (bindoper.hasExecuteActions()) {
             config.dragStartAction = bindoper.makeExecuteActionsHook();
         };
-        // XXX does this.id exist?
-        var group = this.id || 'default';
+        var group = this.__binderId__ || 'default';
         new Droppable(node.id, group, config);
     };
 

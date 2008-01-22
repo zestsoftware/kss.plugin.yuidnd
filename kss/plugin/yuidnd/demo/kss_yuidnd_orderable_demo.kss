@@ -9,6 +9,11 @@
     evt-yuidnd-dragstart-targetIds: second;
 }
 
+#firstlist li:yuidnd-dragsuccess,
+#secondlist li:yuidnd-dragsuccess {
+    action-client: log;
+}
+
 #firstlist:yuidnd-drop(first) {
     evt-yuidnd-drop-action: 'order';
 }
