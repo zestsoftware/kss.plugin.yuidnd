@@ -74,7 +74,44 @@ if (kukit.yuidnd.base_library_present) {
         };
     };
 
+    function dom_getLastElement(el) {
+        for (var i=el.childNodes.length-1; i >= 0; i--) {
+            var child = el.childNodes[i];
+            if (child.nodeType == child.ELEMENT_NODE) {
+                return child;
+            };
+        };
+    };
+
     function dom_getNearestChild(root, x, y) {
+        // XXX does this work properly on all browsers?!?
+        // XXX also, this needs to be modified in case the offsetParent != body
+        var basex = 0;
+        var basey = 0;
+        var current = root;
+        while (current.offsetParent.nodeName.toLowerCase() != 'body') {
+            basex += current.offsetLeft;
+            basey += current.offsetTop;
+            current = current.offsetParent;
+        };
+        for (var i=0; i < root.childNodes.length; i++) {
+            var child = root.childNodes[i];
+            if (child.nodeType != child.ELEMENT_NODE) {
+                continue;
+            };
+            if (child.offsetLeft < x &&
+                    child.offsetLeft + child.offsetWidth > x &&
+                    child.offsetTop < y &&
+                    child.offsetTop + child.offsetHeight > y) {
+                return child;
+            };
+        };
+        return;
+
+
+
+
+
         var region = new yutil.Region(y, x, y + 1, x - 1);
         for (var i=0; i < root.childNodes.length; i++) {
             var child = root.childNodes[i];
@@ -113,31 +150,6 @@ if (kukit.yuidnd.base_library_present) {
             called for every type of droppable (sortable or not)
         */
         Droppable.superclass.constructor.call(this, id, group, config);
-        if (config.action == 'XXXorder') {
-            // in the case of a 'sortable' drop target, we assume all direct
-            // child elements are sortable items, and check whether they're
-            // all of the same type
-            var sortel = Dom.get(id);
-            var nodename = sortel.nodeName.toLowerCase();
-            var allowed = this.allowedElements(nodename);
-            this.allowedElement = allowed;
-            for (var i=0; i < sortel.childNodes.length; i++) {
-                var child = sortel.childNodes[i];
-                if (child.nodeType != child.ELEMENT_NODE) {
-                    continue;
-                };
-                if (!child.id) {
-                    throw new Error('yuidnd sortable child nodes all require ' +
-                          'to have their id set');
-                };
-                var childname = child.nodeName.toLowerCase();
-                if (allowed && array_indexOf(allowed, childname) == -1) {
-                    throw new Error('yuidnd sortable node of type ' + childname + ' ' +
-                          'not allowed in element of type ' + nodename);
-                };
-                new kukit.yuidnd.Draggable(child.id, group, config);
-            };
-        };
     };
 
     Droppable.prototype.allowedElements = function allowedElements(nodename) {
@@ -155,18 +167,27 @@ if (kukit.yuidnd.base_library_present) {
             this is done here rather than on the Draggable because we know
             a bit better what action to perform
         */
+        if (!el) {
+            return;
+        };
         var droppable = this.getEl();
         droppable.isEmpty = false;
         if (this.config.action == 'order') {
-           if (before) {
-                droppable.insertBefore(el, targetel);
-            } else {
-                var realtarget = targetel.nextSibling;
-                if (!realtarget) {
-                    droppable.appendChild(el);
+            if (targetel) {
+                kukit.log('el: ' + el);
+                kukit.log('targetel: ' + targetel);
+                if (before) {
+                    targetel.parentNode.insertBefore(el, targetel);
                 } else {
-                    droppable.insertBefore(el, realtarget);
+                    var realtarget = targetel.nextSibling;
+                    if (!realtarget) {
+                        droppable.appendChild(el);
+                    } else {
+                        targetel.parentNode.insertBefore(el, realtarget);
+                    };
                 };
+            } else {
+                droppable.appendChild(el);
             };
         } else if (this.config.action == 'discard') {
             el.parentNode.removeChild(el);
@@ -194,9 +215,7 @@ if (kukit.yuidnd.base_library_present) {
         };
         Draggable.superclass.constructor.call(this, id, group, config);
         this.isTarget = false;
-        this.el = this.getDragEl();
         el.__draggable = true;
-        // Dom.setStyle(el, 'opacity', 0.67);
         this.goingUp = false;
         this.lastY = 0;
     };
@@ -211,8 +230,6 @@ if (kukit.yuidnd.base_library_present) {
         if (this.config.action == 'delete') {
             Dom.setStyle(sourceel, 'visibility', 'hidden');
         } else if (this.config.action == 'ghost') {
-            Dom.setStyle(sourceel, 'opacity',
-                         (this.config.ghostOpacity || 0.6));
             Dom.addClass(sourceel,
                          (this.config.ghostClass || 'kss-dragdrop-ghost'));
         };
@@ -248,11 +265,9 @@ if (kukit.yuidnd.base_library_present) {
         );
         motion.onComplete.subscribe(
             function onMotionComplete() {
-                // XXX shouldn't we remove it instead?
                 Dom.setStyle(dragel, 'visibility', 'hidden');
                 Dom.setStyle(sourceel, 'visibility', '');
                 if (this.config.action == 'ghost') {
-                    Dom.setStyle(sourceel, 'opacity', 1);
                     Dom.removeClass(sourceel,
                         (this.config.ghostClass || 'kss-dragdrop-ghost'));
                 };
@@ -268,16 +283,16 @@ if (kukit.yuidnd.base_library_present) {
             some point we pass control over to a method on that
         */
         if (ddm.interactionInfo.drop.length == 1) {
-            kukit.log('onDragDrop');
             var point = ddm.interactionInfo.point;
             var region = ddm.interactionInfo.sourceRegion;
             var droppable = ddm.getDDById(id);
-            var targetel = droppable.lastSibling;
+            var dropel = Dom.get(id);
+            var targetel = dom_getLastElement(dropel);
             var before = false;
             if (this.place_info) {
                 targetel = this.place_info[0];
                 before = this.place_info[1] < 0;
-                this.place_info = null;
+                delete this.place_info;
             };
             if (!region.intersect(point)) {
                 var destel = Dom.get(id);
@@ -318,11 +333,18 @@ if (kukit.yuidnd.base_library_present) {
             return;
         };
         if (this.is_not_allowed(sourceel, droppable)) {
+            kukit.log('element ' + sourceel.nodeName + ' not allowed inside ' +
+                      droppable.nodeName);
             return;
         };
         var destparent = Dom.get(id);
-        var destel = dom_getNearestChild(destparent, e.clientX, e.clientY);
-        if (!destel || destel.nodeName != sourceel.nodeName) {
+        var destel = dom_getNearestChild(destparent, e.pageX, e.pageY);
+        if (!destel) {
+            kukit.log('no destel');
+            return;
+        } else if (destel.nodeName != sourceel.nodeName) {
+            kukit.log('destel ' + destel.nodeName + ' not of type' +
+                      sourceel.nodeName);
             return;
         };
         if (this.goingUp) {
@@ -330,6 +352,8 @@ if (kukit.yuidnd.base_library_present) {
         } else {
             this.place_info = [destel, 1];
         };
+        // the following behaviour makes that the item is dropped back not to
+        // the last real location, but to the last place where room was made
         /*
         if (this.goingUp) {
             destparent.insertBefore(sourceel, destel);
@@ -341,7 +365,6 @@ if (kukit.yuidnd.base_library_present) {
             };
             Dom.setStyle(sourceel, 'visibility', '');
             if (this.config.action == 'ghost') {
-                Dom.setStyle(sourceel, 'opacity', 1);
                 Dom.removeClass(sourceel,
                     (this.config.ghostClass || 'kss-dragdrop-ghost'));
             };
@@ -380,12 +403,10 @@ if (kukit.yuidnd.base_library_present) {
             bindoper.evaluateParameters([], {
                 action: 'ghost',
                 ghostClass: 'kss-dragdrop-ghost',
-                ghostOpacity: '0.6',
                 animationSpeed: '0.2',
                 draggingClass: 'kss-dragdrop-dragging',
                 targetIds: ''
             });
-            bindoper.parms.ghostOpacity = oper_evalFloat(bindoper.parms.ghostOpacity);
             bindoper.parms.animationSpeed = oper_evalFloat(
                     bindoper.parms.animationSpeed);
             bindoper.evalList('targetIds');
@@ -395,7 +416,6 @@ if (kukit.yuidnd.base_library_present) {
             // copy some of the params to config
             config.action = bindoper.parms.action;
             config.ghostClass = bindoper.parms.ghostClass;
-            config.ghostOpacity = bindoper.parms.ghostOpacity;
             config.animationSpeed = bindoper.parms.animationSpeed;
             config.draggingClass = bindoper.parms.draggingClass;
             //config.tag = bindoper.parms.tag;
@@ -413,7 +433,8 @@ if (kukit.yuidnd.base_library_present) {
             var bindoper = opers_by_eventname.dragsuccess;
             node = bindoper.node;
             if (!node || !node.id) {
-                throw new Error('yuidnd events can bind only to nodes with an id.');
+                throw new Error('yuidnd events can bind only to nodes with ' +
+                                'an id.');
             };
 ;;;         bindoper.componentName = 'yuidnd dragsuccess event binding';
             if (bindoper.hasExecuteActions()) {
@@ -423,7 +444,8 @@ if (kukit.yuidnd.base_library_present) {
             var bindoper = opers_by_eventname.dragfailure;
             node = bindoper.node;
             if (!node || !node.id) {
-                throw new Error('yuidnd events can bind only to nodes with an id.');
+                throw new Error('yuidnd events can bind only to nodes with ' +
+                                'an id.');
             };
 ;;;         bindoper.componentName = 'yuidnd dragfailure event binding';
             if (bindoper.hasExecuteActions()) {
@@ -443,7 +465,8 @@ if (kukit.yuidnd.base_library_present) {
         var bindoper = opers_by_eventname.drop;
         var node = bindoper.node;
         if (!node || !node.id) {
-            throw new Error('yuidnd events can bind only to nodes with an id.');
+            throw new Error('yuidnd events can bind only to nodes with ' +
+                            'an id.');
         };
 
         var config = {};
