@@ -104,23 +104,6 @@ if (kukit.yuidnd.base_library_present) {
                 return child;
             };
         };
-        return;
-
-
-
-
-
-        var region = new yutil.Region(y, x, y + 1, x - 1);
-        for (var i=0; i < root.childNodes.length; i++) {
-            var child = root.childNodes[i];
-            if (child.nodeType != child.ELEMENT_NODE) {
-                continue;
-            };
-            var cregion = yutil.Region.getRegion(child);
-            if (cregion.intersect(region)) {
-                return child;
-            };
-        };
     };
 
     function string_strip(s) {
