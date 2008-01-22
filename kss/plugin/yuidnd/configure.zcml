@@ -14,27 +14,27 @@
     <!-- Third party library dependencies -->
 
     <browser:resource
-        file="3rd_party/yahoo.js"
+        file="3rd_party/yahoo-min.js"
         name="yahoo.js"
         />
 
     <browser:resource
-        file="3rd_party/dom.js"
+        file="3rd_party/dom-min.js"
         name="dom.js"
         />
 
     <browser:resource
-        file="3rd_party/event.js"
+        file="3rd_party/event-min.js"
         name="event.js"
         />
 
     <browser:resource
-        file="3rd_party/animation.js"
+        file="3rd_party/animation-min.js"
         name="animation.js"
         />
 
     <browser:resource
-        file="3rd_party/dragdrop.js"
+        file="3rd_party/dragdrop-min.js"
         name="dragdrop.js"
         />
 
