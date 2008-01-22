@@ -127,12 +127,12 @@ if (kukit.yuidnd.base_library_present) {
                     continue;
                 };
                 if (!child.id) {
-                    throw('yuidnd sortable child nodes all require ' +
+                    throw new Error('yuidnd sortable child nodes all require ' +
                           'to have their id set');
                 };
                 var childname = child.nodeName.toLowerCase();
                 if (allowed && array_indexOf(allowed, childname) == -1) {
-                    throw('yuidnd sortable node of type ' + childname + ' ' +
+                    throw new Error('yuidnd sortable node of type ' + childname + ' ' +
                           'not allowed in element of type ' + nodename);
                 };
                 new kukit.yuidnd.Draggable(child.id, group, config);
@@ -373,7 +373,7 @@ if (kukit.yuidnd.base_library_present) {
             var bindoper = opers_by_eventname.dragstart;
             node = bindoper.node;
             if (!node || !node.id) {
-                throw('yuidnd events can bind only to nodes with an id.');
+                throw new Error('yuidnd events can bind only to nodes with an id.');
             };
 ;;;         bindoper.componentName = 'yuidnd dragstart event binding';
             // get params ready
@@ -413,7 +413,7 @@ if (kukit.yuidnd.base_library_present) {
             var bindoper = opers_by_eventname.dragsuccess;
             node = bindoper.node;
             if (!node || !node.id) {
-                throw('yuidnd events can bind only to nodes with an id.');
+                throw new Error('yuidnd events can bind only to nodes with an id.');
             };
 ;;;         bindoper.componentName = 'yuidnd dragsuccess event binding';
             if (bindoper.hasExecuteActions()) {
@@ -423,7 +423,7 @@ if (kukit.yuidnd.base_library_present) {
             var bindoper = opers_by_eventname.dragfailure;
             node = bindoper.node;
             if (!node || !node.id) {
-                throw('yuidnd events can bind only to nodes with an id.');
+                throw new Error('yuidnd events can bind only to nodes with an id.');
             };
 ;;;         bindoper.componentName = 'yuidnd dragfailure event binding';
             if (bindoper.hasExecuteActions()) {
@@ -443,7 +443,7 @@ if (kukit.yuidnd.base_library_present) {
         var bindoper = opers_by_eventname.drop;
         var node = bindoper.node;
         if (!node || !node.id) {
-            throw('yuidnd events can bind only to nodes with an id.');
+            throw new Error('yuidnd events can bind only to nodes with an id.');
         };
 
         var config = {};
