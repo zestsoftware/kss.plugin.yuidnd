@@ -172,7 +172,14 @@ if (kukit.yuidnd.base_library_present) {
             };
             if (this.config.action == 'order') {
                 parms['dropContainerId'] = droppable.id;
-                parms['dropIndex'] = array_indexOf(droppable, el);
+                var elementChildren = [];
+                for (var i=0; i < droppable.childNodes.length; i++) {
+                    var child = droppable.childNodes[i];
+                    if (child.nodeType == child.ELEMENT_NODE) {
+                        elementChildren.push(child);
+                    };
+                };
+                parms['dropIndex'] = array_indexOf(elementChildren, el);
             };
         } else if (this.config.action == 'discard') {
             el.parentNode.removeChild(el);
