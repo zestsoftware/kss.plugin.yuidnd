@@ -162,32 +162,31 @@ if (kukit.yuidnd.base_library_present) {
             } else {
                 droppable.appendChild(el);
             };
-            if (this.config.action == 'order') {
-                parms['dropContainerId'] = droppable.id;
-                var currentIndex = -1;
-                var dropIndex = -1
-                for (var i=0; i < droppable.childNodes.length; i++) {
-                    var child = droppable.childNodes[i];
-                    // this needs to check if the element is a draggable, too
-                    if (child.nodeType != child.ELEMENT_NODE ||
-                            !child.id) {
-                        continue;
-                    };
-                    var draggable = ddm.getDDById(child.id);
-                    if (!draggable) {
-                        continue;
-                    };
-                    currentIndex += 1;
-                    if (child === el) {
-                        dropIndex = currentIndex;
-                        break;
-                    };
+            parms['dropContainerId'] = droppable.id;
+            var currentIndex = -1;
+            var dropIndex = -1
+            for (var i=0; i < droppable.childNodes.length; i++) {
+                var child = droppable.childNodes[i];
+                // this needs to check if the element is a draggable, too
+                if (child.nodeType != child.ELEMENT_NODE ||
+                        !child.id) {
+                    continue;
                 };
-                parms['dropIndex'] = dropIndex.toString();
+                var draggable = ddm.getDDById(child.id);
+                if (!draggable) {
+                    continue;
+                };
+                currentIndex += 1;
+                if (child === el) {
+                    dropIndex = currentIndex;
+                    break;
+                };
             };
+            parms['dropIndex'] = dropIndex.toString();
         } else if (this.config.action == 'discard') {
             el.parentNode.removeChild(el);
-        } else if (this.config.action == 'fill') {
+        } else {
+            // fill
             dom_replaceContent(droppable, el);
         };
         if (executableAction) {
@@ -535,6 +534,14 @@ if (kukit.yuidnd.base_library_present) {
 
         // copy some of the params to config
         config.action = bindoper.parms.action;
+        if (config.action != 'fill' &&
+                config.action != 'discard' &&
+                config.action != 'order') {
+            kukit.logWarning('drop action ' + config.action +
+                             ' not supported, falling back to ' +
+                             '\'fill\' (possible values: \'discard\', ' +
+                             '\'fill\' or \'order\')');
+        };
         config.padding = bindoper.parms.padding;
         config.maintainOffset = bindoper.parms.maintainOffset;
         config.primaryButtonOnly = bindoper.parms.primaryButtonOnly;
