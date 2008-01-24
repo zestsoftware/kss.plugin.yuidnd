@@ -248,7 +248,11 @@ if (kukit.yuidnd.base_library_present) {
         dragel.innerHTML = sourceel.innerHTML;
 
         if (this.config.action == 'delete') {
-            Dom.setStyle(sourceel, 'visibility', 'hidden');
+            var replacement = sourceel.ownerDocument.createElement('div');
+            Dom.setStyle(replacement, 'height', '0px');
+            sourceel._replacement = replacement;
+            sourceel.parentNode.replaceChild(replacement, sourceel);
+            //Dom.setStyle(sourceel, 'visibility', 'hidden');
         } else if (this.config.action == 'ghost') {
             Dom.addClass(sourceel,
                          (this.config.ghostClass || 'kss-dragdrop-ghost'));
@@ -286,6 +290,11 @@ if (kukit.yuidnd.base_library_present) {
             function onMotionComplete() {
                 Dom.setStyle(dragel, 'visibility', 'hidden');
                 Dom.setStyle(sourceel, 'visibility', '');
+                if (sourceel._replacement) {
+                    sourceel._replacement.parentNode.replaceChild(
+                        sourceel, sourceel._replacement);
+                    delete sourceel._replacement;
+                };
                 if (this.config.action == 'ghost') {
                     Dom.removeClass(sourceel,
                         (this.config.ghostClass || 'kss-dragdrop-ghost'));
@@ -295,7 +304,7 @@ if (kukit.yuidnd.base_library_present) {
         motion.animate();
     };
 
-    Draggable.prototype.onDragDrop = function onDragDrop(el, id) {
+    Draggable.prototype.onDragDrop = function onDragDrop(e, id) {
         /* the item is dropped into the droppable
 
             what happens mostly depends on droppable config, so at
@@ -306,10 +315,16 @@ if (kukit.yuidnd.base_library_present) {
             delete this._order_clone;
         };
         if (ddm.interactionInfo.drop.length == 1) {
-            var point = ddm.interactionInfo.point;
-            var region = ddm.interactionInfo.sourceRegion;
             var sourceel = this.getEl();
+            kukit.log(sourceel._replacement);
             Dom.setStyle(sourceel, 'visibility', '');
+            if (sourceel._replacement) {
+                sourceel._replacement.parentNode.replaceChild(
+                    sourceel, sourceel._replacement);
+                delete sourceel._replacement;
+            };
+            var point = ddm.interactionInfo.point;
+            var region = yutil.Region.getRegion(sourceel);
             var dropel = Dom.get(id);
             var droppable = ddm.getDDById(id);
             var targetel = dom_getLastElement(dropel);
@@ -331,10 +346,10 @@ if (kukit.yuidnd.base_library_present) {
         };
     };
 
-    Draggable.prototype.onDrag = function onDrag(el) {
+    Draggable.prototype.onDrag = function onDrag(e) {
         /* set this.goingUp, used to determine where an ordered item is placed
         */
-        var y = Event.getPageY(el);
+        var y = Event.getPageY(e);
         if (y < this.lastY) {
             this.goingUp = true;
         } else if (y > this.lastY) {
