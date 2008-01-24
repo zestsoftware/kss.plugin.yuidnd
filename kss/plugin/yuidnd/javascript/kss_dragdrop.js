@@ -81,17 +81,23 @@ if (kukit.yuidnd.base_library_present) {
         };
     };
 
-    function dom_getNearestChild(root, x, y) {
-        // XXX does this work properly on all browsers?!?
-        // XXX also, this needs to be modified in case the offsetParent != body
-        var basex = 0;
-        var basey = 0;
-        var current = root;
+    function dom_getPageCoords(el) {
+        var x = el.offsetLeft;
+        var y = el.offsetTop;
+        var current = el;
         while (current.offsetParent.nodeName.toLowerCase() != 'body') {
-            basex += current.offsetLeft;
-            basey += current.offsetTop;
+            x += current.offsetLeft;
+            y += current.offsetTop;
             current = current.offsetParent;
         };
+        return [x, y];
+    };
+
+    function dom_getNearestChild(root, x, y) {
+        // XXX does this work properly on all browsers?!?
+        var rootcoords = dom_getPageCoords(root);
+        var basex = rootcoords[0];
+        var basey = rootcoords[1];
         for (var i=0; i < root.childNodes.length; i++) {
             var child = root.childNodes[i];
             if (child.nodeType != child.ELEMENT_NODE) {
@@ -222,8 +228,8 @@ if (kukit.yuidnd.base_library_present) {
         Draggable.superclass.constructor.call(this, id, group, config);
         this.config = config;
         this.isTarget = false;
-        el.__draggable = true;
         this.goingUp = false;
+        el.__draggable = true;
         this.lastY = 0;
     };
 
@@ -241,10 +247,6 @@ if (kukit.yuidnd.base_library_present) {
 
         if (this.config.action == 'delete') {
             Dom.setStyle(sourceel, 'visibility', 'hidden');
-            sourceel.originalHeight = sourceel.clientHeight;
-            sourceel.originalBorder = Dom.getStyle(sourceel, 'border');
-            Dom.setStyle(sourceel, 'height', '0px');
-            Dom.setStyle(sourceel, 'border', '0px');
         } else if (this.config.action == 'ghost') {
             Dom.addClass(sourceel,
                          (this.config.ghostClass || 'kss-dragdrop-ghost'));
@@ -282,8 +284,6 @@ if (kukit.yuidnd.base_library_present) {
             function onMotionComplete() {
                 Dom.setStyle(dragel, 'visibility', 'hidden');
                 Dom.setStyle(sourceel, 'visibility', '');
-                Dom.setStyle(sourceel, 'height', sourceel.originalHeight);
-                Dom.setStyle(sourceel, 'border', sourceel.originalBorder);
                 if (this.config.action == 'ghost') {
                     Dom.removeClass(sourceel,
                         (this.config.ghostClass || 'kss-dragdrop-ghost'));
@@ -307,8 +307,6 @@ if (kukit.yuidnd.base_library_present) {
             var point = ddm.interactionInfo.point;
             var region = ddm.interactionInfo.sourceRegion;
             var sourceel = this.getEl();
-            Dom.setStyle(sourceel, 'height', sourceel.originalHeight);
-            Dom.setStyle(sourceel, 'border', sourceel.originalBorder);
             Dom.setStyle(sourceel, 'visibility', '');
             var dropel = Dom.get(id);
             var droppable = ddm.getDDById(id);
@@ -397,8 +395,6 @@ if (kukit.yuidnd.base_library_present) {
             };
         };
         Dom.setStyle(clone, 'visibility', '');
-        Dom.setStyle(clone, 'height', sourceel.originalHeight);
-        Dom.setStyle(clone, 'border', sourceel.originalBorder);
         Dom.removeClass(clone,
             (this.config.ghostClass || 'kss-dragdrop-ghost'));
         ddm.refreshCache();
