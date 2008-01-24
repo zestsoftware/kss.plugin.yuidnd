@@ -217,6 +217,22 @@ if (kukit.yuidnd.base_library_present) {
         this.goingUp = false;
         el.__draggable = true;
         this.lastY = 0;
+        if (config.handleClass) {
+            // XXX hmmm... a NodeIterator would be nice here...
+            var allels = el.getElementsByTagName('*');
+            var handles = [];
+            for (var i=0; i < allels.length; i++) {
+                var child = allels[i];
+                if (child.className == config.handleClass) {
+                    if (!child.id) {
+                        kukit.logWarning('yuidnd drag handles need to have ' +
+                                         'an id. (className ' +
+                                         config.handleClass +')');
+                    };
+                    this.setHandleElId(child.id);
+                };
+            };
+        };
     };
 
     Draggable.prototype.startDrag = function startDrag(x, y) {
@@ -358,8 +374,8 @@ if (kukit.yuidnd.base_library_present) {
         } else if (this.allowed && destel.nodeName != sourceel.nodeName) {
             // this is only called for tr and li draggables (when this is
             // the caase, this.allowed is set, else it isn't)
-            kukit.log('destel ' + destel.nodeName + ' not of type' +
-                      sourceel.nodeName);
+            kukit.logWarning('destel ' + destel.nodeName + ' not of type' +
+                             sourceel.nodeName);
             return;
         };
         if (this.goingUp) {
@@ -407,7 +423,8 @@ if (kukit.yuidnd.base_library_present) {
             var bindoper = opers_by_eventname.dragstart;
             node = bindoper.node;
             if (!node || !node.id) {
-                throw new Error('yuidnd events can bind only to nodes with an id.');
+                throw new Error('yuidnd events can bind only to nodes with ' +
+                                'an id.');
             };
 ;;;         bindoper.componentName = 'yuidnd dragstart event binding';
             // get params ready
@@ -416,6 +433,7 @@ if (kukit.yuidnd.base_library_present) {
                 ghostClass: 'kss-dragdrop-ghost',
                 animationSpeed: '0.2',
                 draggingClass: 'kss-dragdrop-dragging',
+                handleClass: '',
                 targetIds: ''
             });
             bindoper.parms.animationSpeed = oper_evalFloat(
@@ -434,7 +452,7 @@ if (kukit.yuidnd.base_library_present) {
             config.ghostClass = bindoper.parms.ghostClass;
             config.animationSpeed = bindoper.parms.animationSpeed;
             config.draggingClass = bindoper.parms.draggingClass;
-            //config.tag = bindoper.parms.tag;
+            config.handleClass = bindoper.parms.handleClass;
 
             var groups = [];
             var targetids = bindoper.parms.targetIds;

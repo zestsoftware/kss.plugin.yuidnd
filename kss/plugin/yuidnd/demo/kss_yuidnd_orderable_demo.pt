@@ -36,13 +36,13 @@
          Non-draggable item in second list
        </li>
        <li class="draggable-orange" id="l2li">
-         <span class="handle">DRAG HERE</span> Item 1 from second list.
+         <span class="handle" id="handle1">DRAG HERE</span> Item 1 from second list.
        </li>
        <li class="draggable-orange" id="l2li3">
-         <span class="handle">DRAG HERE</span> Item 2 from second list.
+         <span class="handle" id="handle2">DRAG HERE</span> Item 2 from second list.
        </li>
        <li class="draggable-orange" id="l2li4">
-         <span class="handle">DRAG HERE</span> Item 3 from second list.
+         <span class="handle" id="handle3">DRAG HERE</span> Item 3 from second list.
        </li>
      </ul>
     </div>
