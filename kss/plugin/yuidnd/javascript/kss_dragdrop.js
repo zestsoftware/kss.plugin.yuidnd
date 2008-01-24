@@ -172,14 +172,26 @@ if (kukit.yuidnd.base_library_present) {
             };
             if (this.config.action == 'order') {
                 parms['dropContainerId'] = droppable.id;
-                var elementChildren = [];
+                var currentIndex = -1;
+                var dropIndex = -1
                 for (var i=0; i < droppable.childNodes.length; i++) {
                     var child = droppable.childNodes[i];
-                    if (child.nodeType == child.ELEMENT_NODE) {
-                        elementChildren.push(child);
+                    // this needs to check if the element is a draggable, too
+                    if (child.nodeType != child.ELEMENT_NODE ||
+                            !child.id) {
+                        continue;
+                    };
+                    var draggable = ddm.getDDById(child.id);
+                    if (!draggable) {
+                        continue;
+                    };
+                    currentIndex += 1;
+                    if (child === el) {
+                        dropIndex = currentIndex;
+                        break;
                     };
                 };
-                parms['dropIndex'] = array_indexOf(elementChildren, el);
+                parms['dropIndex'] = dropIndex.toString();
             };
         } else if (this.config.action == 'discard') {
             el.parentNode.removeChild(el);
@@ -247,6 +259,10 @@ if (kukit.yuidnd.base_library_present) {
             moves the element back to its origin (nicely animated of course ;)
         */
         kukit.log('end drag ' + this.id);
+        if (this._order_clone) {
+            this._order_clone.parentNode.removeChild(this._order_clone);
+            delete this._order_clone;
+        };
         var sourceel = this.getEl();
         var dragel = this.getDragEl();
 
@@ -277,6 +293,10 @@ if (kukit.yuidnd.base_library_present) {
             what happens mostly depends on droppable config, so at
             some point we pass control over to a method on that
         */
+        if (this._order_clone) {
+            this._order_clone.parentNode.removeChild(this._order_clone);
+            delete this._order_clone;
+        };
         if (ddm.interactionInfo.drop.length == 1) {
             var point = ddm.interactionInfo.point;
             var region = ddm.interactionInfo.sourceRegion;
@@ -294,6 +314,9 @@ if (kukit.yuidnd.base_library_present) {
                 var destel = Dom.get(id);
                 droppable.continueDropEvent(sourceel, targetel, before,
                                             this.config.dragSuccessAction);
+                Dom.removeClass(sourceel,
+                                (this.config.ghostClass ||
+                                 'kss-dragdrop-ghost'));
                 ddm.refreshCache();
             };
         };
@@ -321,6 +344,10 @@ if (kukit.yuidnd.base_library_present) {
             be where the draggable is moved 'back' to on 'endDrag' - perhaps
             we just want to disable (or improve) this
         */
+        if (this._order_clone) {
+            this._order_clone.parentNode.removeChild(this._order_clone);
+            delete this._order_clone;
+        };
         var sourceel = this.getEl();
         var droppable = ddm.getDDById(id);
         if (droppable.config.action != 'order') {
@@ -336,7 +363,9 @@ if (kukit.yuidnd.base_library_present) {
         if (!destel) {
             kukit.log('no destel');
             return;
-        } else if (destel.nodeName != sourceel.nodeName) {
+        } else if (this.allowed && destel.nodeName != sourceel.nodeName) {
+            // this is only called for tr and li draggables (when this is
+            // the caase, this.allowed is set, else it isn't)
             kukit.log('destel ' + destel.nodeName + ' not of type' +
                       sourceel.nodeName);
             return;
@@ -346,24 +375,21 @@ if (kukit.yuidnd.base_library_present) {
         } else {
             this.place_info = [destel, 1];
         };
-        // the following behaviour makes that the item is dropped back not to
-        // the last real location, but to the last place where room was made
-        /*
+        var clone = sourceel.cloneNode(true);
+        Dom.addClass(clone, (this.config.cloneClass || 'kss-dragdrop-clone'));
+        this._order_clone = clone;
         if (this.goingUp) {
-            destparent.insertBefore(sourceel, destel);
+            destparent.insertBefore(clone, destel);
         } else {
             if (destel.nextSibling) {
-                destparent.insertBefore(sourceel, destel.nextSibling);
+                destparent.insertBefore(clone, destel.nextSibling);
             } else {
-                destparent.appendChild(sourceel);
+                destparent.appendChild(clone);
             };
-            Dom.setStyle(sourceel, 'visibility', '');
-            if (this.config.action == 'ghost') {
-                Dom.removeClass(sourceel,
-                    (this.config.ghostClass || 'kss-dragdrop-ghost'));
-            };
+            Dom.setStyle(clone, 'visibility', '');
+            Dom.removeClass(clone,
+                (this.config.ghostClass || 'kss-dragdrop-ghost'));
         };
-        */
         ddm.refreshCache();
     };
 
@@ -403,8 +429,6 @@ if (kukit.yuidnd.base_library_present) {
             bindoper.parms.animationSpeed = oper_evalFloat(
                     bindoper.parms.animationSpeed);
             bindoper.evalList('targetIds');
-
-            bindoper.parms.action == 'ghost'
 
             // copy some of the params to config
             config.action = bindoper.parms.action;

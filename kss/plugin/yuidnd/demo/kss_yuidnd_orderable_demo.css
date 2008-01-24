@@ -45,3 +45,12 @@ span.handle {
 .hoverClass {
     background-color:#FFFFFF;
 }
+
+.kss-dragdrop-ghost {
+    opacity: 0.6;
+    filter:alpha(opacity=60);
+}
+
+.kss-dragdrop-clone {
+    border: 1px solid red;
+}

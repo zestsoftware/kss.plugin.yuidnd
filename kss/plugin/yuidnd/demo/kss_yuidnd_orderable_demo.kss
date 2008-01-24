@@ -1,25 +1,21 @@
-/* kss rules for drag and drop
- */
+/* kss rules for drag and drop demo
+*/
 
-#firstlist li:yuidnd-dragstart {
+.draggable-green:yuidnd-dragstart {
     evt-yuidnd-dragstart-targetIds: 'first,second';
+    evt-yuidnd-dragstart-action: 'ghost';
 }
 
-#secondlist li:yuidnd-dragstart {
-    evt-yuidnd-dragstart-targetIds: second;
+.draggable-orange:yuidnd-dragstart {
+    evt-yuidnd-dragstart-targetIds: 'first,second';
+    evt-yuidnd-dragstart-action: 'remove';
 }
 
-#firstlist li:yuidnd-dragsuccess,
-#secondlist li:yuidnd-dragsuccess {
+.draggable-green:yuidnd-dragsuccess {
     action-client: log;
     log-message: pass(dropIndex);
 }
 
-#firstlist:yuidnd-drop(first) {
+#firstlist:yuidnd-drop(first), #secondlist:yuidnd-drop(second) {
     evt-yuidnd-drop-action: 'order';
 }
-
-#secondlist:yuidnd-drop(second) {
-    evt-yuidnd-drop-action: 'order';
-}
-
