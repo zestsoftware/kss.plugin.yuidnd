@@ -3,12 +3,12 @@
 
 .draggable-green:yuidnd-dragstart {
     evt-yuidnd-dragstart-targetIds: 'first,second';
-    evt-yuidnd-dragstart-action: 'ghost';
+    evt-yuidnd-dragstart-action: 'delete';
 }
 
 .draggable-orange:yuidnd-dragstart {
     evt-yuidnd-dragstart-targetIds: 'first,second';
-    evt-yuidnd-dragstart-action: 'remove';
+    evt-yuidnd-dragstart-action: 'delete';
 }
 
 .draggable-green:yuidnd-dragsuccess {

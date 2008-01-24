@@ -234,17 +234,20 @@ if (kukit.yuidnd.base_library_present) {
                   ', ' + y + ')');
         var dragel = this.getDragEl();
         var sourceel = this.getEl();
+
+        // XXX perhaps using cloneNode() yields better results here, but not
+        // in all browsers obviously :|
+        dragel.innerHTML = sourceel.innerHTML;
+
         if (this.config.action == 'delete') {
             Dom.setStyle(sourceel, 'visibility', 'hidden');
+            sourceel.originalHeight = sourceel.offsetHeight;
+            Dom.setStyle(sourceel, 'height', '0px');
         } else if (this.config.action == 'ghost') {
             Dom.addClass(sourceel,
                          (this.config.ghostClass || 'kss-dragdrop-ghost'));
         };
         
-        // XXX perhaps using cloneNode() yields better results here, but not
-        // in all browsers obviously :|
-        dragel.innerHTML = sourceel.innerHTML;
-
         // XXX can we somehow copy styles here? :|
         Dom.addClass(dragel,
                      (this.config.draggingClass || 'kss-dragdrop-dragging'));
@@ -266,7 +269,6 @@ if (kukit.yuidnd.base_library_present) {
         var sourceel = this.getEl();
         var dragel = this.getDragEl();
 
-        // XXX copied, but don't understand why it's required...
         Dom.setStyle(dragel, 'visibility', '');
         var motion = new yutil.Motion(
             dragel,
@@ -278,6 +280,7 @@ if (kukit.yuidnd.base_library_present) {
             function onMotionComplete() {
                 Dom.setStyle(dragel, 'visibility', 'hidden');
                 Dom.setStyle(sourceel, 'visibility', '');
+                Dom.setStyle(sourceel, 'height', sourceel.originalHeight);
                 if (this.config.action == 'ghost') {
                     Dom.removeClass(sourceel,
                         (this.config.ghostClass || 'kss-dragdrop-ghost'));
@@ -301,6 +304,8 @@ if (kukit.yuidnd.base_library_present) {
             var point = ddm.interactionInfo.point;
             var region = ddm.interactionInfo.sourceRegion;
             var sourceel = this.getEl();
+            Dom.setStyle(sourceel, 'height', sourceel.originalHeight);
+            Dom.setStyle(sourceel, 'visibility', '');
             var dropel = Dom.get(id);
             var droppable = ddm.getDDById(id);
             var targetel = dom_getLastElement(dropel);
@@ -386,10 +391,11 @@ if (kukit.yuidnd.base_library_present) {
             } else {
                 destparent.appendChild(clone);
             };
-            Dom.setStyle(clone, 'visibility', '');
-            Dom.removeClass(clone,
-                (this.config.ghostClass || 'kss-dragdrop-ghost'));
         };
+        Dom.setStyle(clone, 'visibility', '');
+        Dom.setStyle(clone, 'height', sourceel.originalHeight);
+        Dom.removeClass(clone,
+            (this.config.ghostClass || 'kss-dragdrop-ghost'));
         ddm.refreshCache();
     };
 
@@ -432,6 +438,13 @@ if (kukit.yuidnd.base_library_present) {
 
             // copy some of the params to config
             config.action = bindoper.parms.action;
+            if (config.action != 'ghost' && config.action != 'delete' &&
+                    config.action != 'preserve') {
+                kukit.logWarning('drag action ' + config.action +
+                                 ' not supported, falling back to ' +
+                                 '\'ghost\' (possible values: \'preserve\', ' +
+                                 '\'ghost\' or \'delete\')');
+            };
             config.ghostClass = bindoper.parms.ghostClass;
             config.animationSpeed = bindoper.parms.animationSpeed;
             config.draggingClass = bindoper.parms.draggingClass;
