@@ -81,32 +81,18 @@ if (kukit.yuidnd.base_library_present) {
         };
     };
 
-    function dom_getPageCoords(el) {
-        var x = el.offsetLeft;
-        var y = el.offsetTop;
-        var current = el;
-        while (current.offsetParent.nodeName.toLowerCase() != 'body') {
-            x += current.offsetLeft;
-            y += current.offsetTop;
-            current = current.offsetParent;
-        };
-        return [x, y];
-    };
-
     function dom_getNearestChild(root, x, y) {
         // XXX does this work properly on all browsers?!?
-        var rootcoords = dom_getPageCoords(root);
-        var basex = rootcoords[0];
-        var basey = rootcoords[1];
         for (var i=0; i < root.childNodes.length; i++) {
             var child = root.childNodes[i];
             if (child.nodeType != child.ELEMENT_NODE) {
                 continue;
             };
-            if (child.offsetLeft < x &&
-                    child.offsetLeft + child.offsetWidth > x &&
-                    child.offsetTop < y &&
-                    child.offsetTop + child.offsetHeight > y) {
+            var childcoords = Dom.getXY(child);
+            var bottomright = [childcoords[0] + child.offsetWidth,
+                               childcoords[1] + child.offsetHeight];
+            if (childcoords[0] < x && bottomright[0] > x &&
+                    childcoords[1] < y && bottomright[1] > y) {
                 return child;
             };
         };
@@ -361,14 +347,13 @@ if (kukit.yuidnd.base_library_present) {
             return;
         };
         if (this.is_not_allowed(sourceel, droppable)) {
-            kukit.log('element ' + sourceel.nodeName + ' not allowed inside ' +
-                      droppable.nodeName);
+            kukit.logWarning('element ' + sourceel.nodeName +
+                             ' not allowed inside ' + droppable.nodeName);
             return;
         };
         var destparent = Dom.get(id);
         var destel = dom_getNearestChild(destparent, e.pageX, e.pageY);
         if (!destel) {
-            kukit.log('no destel');
             return;
         } else if (this.allowed && destel.nodeName != sourceel.nodeName) {
             // this is only called for tr and li draggables (when this is
