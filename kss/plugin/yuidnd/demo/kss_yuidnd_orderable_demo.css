@@ -52,5 +52,9 @@ span.handle {
 }
 
 .kss-dragdrop-clone {
-    border: 1px solid red;
+    visibility: hidden;
+}
+
+.kss-dragdrop-clone-border {
+    border: 1px solid gray;
 }

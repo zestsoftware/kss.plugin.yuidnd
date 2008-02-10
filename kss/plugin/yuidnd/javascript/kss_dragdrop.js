@@ -398,18 +398,22 @@ if (kukit.yuidnd.base_library_present) {
             this.place_info = [destel, 1];
         };
         var clone = sourceel.cloneNode(true);
+        Dom.setStyle(clone, 'visibility', '');
+        var borderdiv = sourceel.ownerDocument.createElement('div');
+        borderdiv.appendChild(clone);
+        Dom.addClass(borderdiv, (this.config.cloneBorderClass ||
+                                 'kss-dragdrop-clone-border'));
         Dom.addClass(clone, (this.config.cloneClass || 'kss-dragdrop-clone'));
-        this._order_clone = clone;
+        this._order_clone = borderdiv;
         if (this.goingUp) {
-            destparent.insertBefore(clone, destel);
+            destparent.insertBefore(borderdiv, destel);
         } else {
             if (destel.nextSibling) {
-                destparent.insertBefore(clone, destel.nextSibling);
+                destparent.insertBefore(borderdiv, destel.nextSibling);
             } else {
-                destparent.appendChild(clone);
+                destparent.appendChild(borderdiv);
             };
         };
-        Dom.setStyle(clone, 'visibility', '');
         Dom.removeClass(clone,
             (this.config.ghostClass || 'kss-dragdrop-ghost'));
         ddm.refreshCache();
