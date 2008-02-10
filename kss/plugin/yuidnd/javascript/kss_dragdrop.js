@@ -285,6 +285,7 @@ if (kukit.yuidnd.base_library_present) {
             this.config.animationSpeed || 0.2,
             yutil.Easing.easeout
         );
+        var self = this;
         motion.onComplete.subscribe(
             function onMotionComplete() {
                 Dom.setStyle(dragel, 'visibility', 'hidden');
@@ -294,9 +295,9 @@ if (kukit.yuidnd.base_library_present) {
                         sourceel, sourceel._replacement);
                     delete sourceel._replacement;
                 };
-                if (this.config.action == 'ghost') {
+                if (self.config.action == 'ghost') {
                     Dom.removeClass(sourceel,
-                        (this.config.ghostClass || 'kss-dragdrop-ghost'));
+                        (self.config.ghostClass || 'kss-dragdrop-ghost'));
                 };
             }
         );
@@ -348,13 +349,21 @@ if (kukit.yuidnd.base_library_present) {
     Draggable.prototype.onDrag = function onDrag(e) {
         /* set this.goingUp, used to determine where an ordered item is placed
         */
-        var y = Event.getPageY(e);
-        if (y < this.lastY) {
+        if (!this.place_info) {
+            return;
+        };
+        var y = e.pageY;
+        var destel = this.place_info[0];
+        var destY = Dom.getXY(destel)[1];
+        var destHeight = destel.offsetHeight;
+        if (y < this.lastY && y < destY + (destHeight / 5 * 3)) {
             this.goingUp = true;
-        } else if (y > this.lastY) {
+        } else if (y > this.lastY && y > destY + (destHeight / 5)) {
+            this.goingUp = false;
+        } else if (y > destY + (destHeight / 5 * 3)) {
             this.goingUp = false;
         };
-        this.lastY = y;
+        this.lastY = e.pageY;
     };
 
     Draggable.prototype.onDragOver = function onDragOver(e, id) {
