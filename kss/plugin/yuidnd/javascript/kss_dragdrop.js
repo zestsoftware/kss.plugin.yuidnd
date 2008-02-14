@@ -82,17 +82,9 @@ if (kukit.yuidnd.base_library_present) {
     };
 
     function dom_getNearestChild(root, x, y) {
-        // XXX does this work properly on all browsers?!?
         for (var i=0; i < root.childNodes.length; i++) {
             var child = root.childNodes[i];
-            if (child.nodeType != child.ELEMENT_NODE) {
-                continue;
-            };
-            var childcoords = Dom.getXY(child);
-            var bottomright = [childcoords[0] + child.offsetWidth,
-                               childcoords[1] + child.offsetHeight];
-            if (childcoords[0] < x && bottomright[0] > x &&
-                    childcoords[1] < y && bottomright[1] > y) {
+            if (y < child.offsetTop + child.offsetHeight / 2) {
                 return child;
             };
         };
@@ -134,8 +126,7 @@ if (kukit.yuidnd.base_library_present) {
     };
 
     Droppable.prototype.continueDropEvent =
-            function continueDropEvent(el, targetel, before,
-                                       executableAction) {
+            function continueDropEvent(el, targetel, executableAction) {
         /* actually handle the drop
 
             this is done here rather than on the Draggable because we know
@@ -149,16 +140,7 @@ if (kukit.yuidnd.base_library_present) {
         var parms = {};
         if (this.config.action == 'order') {
             if (targetel) {
-                if (before) {
-                    targetel.parentNode.insertBefore(el, targetel);
-                } else {
-                    var realtarget = targetel.nextSibling;
-                    if (!realtarget) {
-                        droppable.appendChild(el);
-                    } else {
-                        targetel.parentNode.insertBefore(el, realtarget);
-                    };
-                };
+                targetel.parentNode.insertBefore(el, targetel);
             } else {
                 droppable.appendChild(el);
             };
@@ -213,7 +195,6 @@ if (kukit.yuidnd.base_library_present) {
         Draggable.superclass.constructor.call(this, id, group, config);
         this.config = config;
         this.isTarget = false;
-        this.goingUp = false;
         el.__draggable = true;
         this.lastY = 0;
         if (config.handleClass) {
@@ -266,9 +247,10 @@ if (kukit.yuidnd.base_library_present) {
     };
 
     Draggable.prototype.endDrag = function endDrag(e) {
-        /* end drag without a drop
+        /* end drag
 
-            moves the element back to its origin (nicely animated of course ;)
+            moves the element to its target, or back to its origin (nicely
+            animated of course ;)
         */
         kukit.log('end drag ' + this.id);
         if (this._order_clone) {
@@ -325,18 +307,11 @@ if (kukit.yuidnd.base_library_present) {
             };
             var point = ddm.interactionInfo.point;
             var region = yutil.Region.getRegion(sourceel);
-            var dropel = Dom.get(id);
             var droppable = ddm.getDDById(id);
-            var targetel = dom_getLastElement(dropel);
-            var before = false;
-            if (this.place_info) {
-                targetel = this.place_info[0];
-                before = this.place_info[1] < 0;
-                delete this.place_info;
-            };
+            var targetel = this._destel;
             if (!region.intersect(point)) {
                 var destel = Dom.get(id);
-                droppable.continueDropEvent(sourceel, targetel, before,
+                droppable.continueDropEvent(sourceel, targetel,
                                             this.config.dragSuccessAction);
                 Dom.removeClass(sourceel,
                                 (this.config.ghostClass ||
@@ -344,26 +319,6 @@ if (kukit.yuidnd.base_library_present) {
                 ddm.refreshCache();
             };
         };
-    };
-
-    Draggable.prototype.onDrag = function onDrag(e) {
-        /* set this.goingUp, used to determine where an ordered item is placed
-        */
-        if (!this.place_info) {
-            return;
-        };
-        var y = e.pageY;
-        var destel = this.place_info[0];
-        var destY = Dom.getXY(destel)[1];
-        var destHeight = destel.offsetHeight;
-        if (y < this.lastY && y < destY + (destHeight / 5 * 3)) {
-            this.goingUp = true;
-        } else if (y > this.lastY && y > destY + (destHeight / 5)) {
-            this.goingUp = false;
-        } else if (y > destY + (destHeight / 5 * 3)) {
-            this.goingUp = false;
-        };
-        this.lastY = e.pageY;
     };
 
     Draggable.prototype.onDragOver = function onDragOver(e, id) {
@@ -376,10 +331,15 @@ if (kukit.yuidnd.base_library_present) {
             be where the draggable is moved 'back' to on 'endDrag' - perhaps
             we just want to disable (or improve) this
         */
+        this._destel = false;
+
+        // if we have an _order_clone (space to visualize where draggable will
+        // be dropped), remove it
         if (this._order_clone) {
             this._order_clone.parentNode.removeChild(this._order_clone);
             delete this._order_clone;
         };
+        // find the source element
         var sourceel = this.getEl();
         var droppable = ddm.getDDById(id);
         if (droppable.config.action != 'order') {
@@ -390,22 +350,20 @@ if (kukit.yuidnd.base_library_present) {
                              ' not allowed inside ' + droppable.nodeName);
             return;
         };
+
+        // find the destination element
         var destparent = Dom.get(id);
         var destel = dom_getNearestChild(destparent, e.pageX, e.pageY);
-        if (!destel) {
-            return;
-        } else if (this.allowed && destel.nodeName != sourceel.nodeName) {
+        if (this.allowed && destel.nodeName != sourceel.nodeName) {
             // this is only called for tr and li draggables (when this is
             // the caase, this.allowed is set, else it isn't)
             kukit.logWarning('destel ' + destel.nodeName + ' not of type' +
                              sourceel.nodeName);
             return;
         };
-        if (this.goingUp) {
-            this.place_info = [destel, -1];
-        } else {
-            this.place_info = [destel, 1];
-        };
+        this._destel = destel;
+
+        // create a clone (space for droppable)
         var clone = sourceel.cloneNode(true);
         Dom.setStyle(clone, 'visibility', '');
         var borderdiv = sourceel.ownerDocument.createElement('div');
@@ -414,15 +372,14 @@ if (kukit.yuidnd.base_library_present) {
                                  'kss-dragdrop-clone-border'));
         Dom.addClass(clone, (this.config.cloneClass || 'kss-dragdrop-clone'));
         this._order_clone = borderdiv;
-        if (this.goingUp) {
+
+        // add the clone
+        if (destel) {
             destparent.insertBefore(borderdiv, destel);
         } else {
-            if (destel.nextSibling) {
-                destparent.insertBefore(borderdiv, destel.nextSibling);
-            } else {
-                destparent.appendChild(borderdiv);
-            };
+            destparent.appendChild(borderdiv);
         };
+
         Dom.removeClass(clone,
             (this.config.ghostClass || 'kss-dragdrop-ghost'));
         ddm.refreshCache();
