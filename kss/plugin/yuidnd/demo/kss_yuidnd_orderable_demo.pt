@@ -23,7 +23,7 @@
     <div style="height:200px;">
     <div style="float:left;">
     <h3>This is the first list</h3>
-     <ul class="draggable-container" id="firstlist" style="height:150px;width:200px;">
+     <ul class="draggable-container" id="firstlist" style="min-height:150px;width:200px;">
        <li class="draggable-green" id="l1li1">Item 1 from first list.</li>
        <li class="draggable-green" id="l1li2">Item 2 from first list.</li>
        <li class="draggable-green" id="l1li3">Item 3 from first list.</li>
@@ -31,7 +31,7 @@
     </div>
      <div style="float:left;">
      <h3>And now the second list</h3>
-     <ul class="draggable-container" id="secondlist" style="height:150px;width:200px;">
+     <ul class="draggable-container" id="secondlist" style="min-height:150px;width:200px;">
        <li class="nondraggable-orange" id="l2li1">
          Non-draggable item in second list
        </li>

@@ -56,5 +56,6 @@ span.handle {
 }
 
 .kss-dragdrop-clone-border {
-    border: 1px solid gray;
+    border-style: solid;
+    border: 1px dotted gray;
 }

@@ -81,13 +81,24 @@ if (kukit.yuidnd.base_library_present) {
         };
     };
 
-    function dom_getNearestChild(root, x, y) {
+    function dom_getNearestChild(root, el) {
         for (var i=0; i < root.childNodes.length; i++) {
             var child = root.childNodes[i];
-            if (y < child.offsetTop + child.offsetHeight / 2) {
+            if (child.nodeType != 1) {
+                continue;
+            };
+            if (Dom.getXY(el)[1] < Dom.getXY(child)[1]) {
                 return child;
             };
         };
+    };
+
+    function dom_getNextElementSibling(el) {
+        var next = el.nextSibling;
+        while (next && next.nodeType != 1) {
+            next = next.nextSibling;
+        };
+        return next;
     };
 
     function string_strip(s) {
@@ -298,7 +309,6 @@ if (kukit.yuidnd.base_library_present) {
         };
         if (ddm.interactionInfo.drop.length == 1) {
             var sourceel = this.getEl();
-            kukit.log(sourceel._replacement);
             Dom.setStyle(sourceel, 'visibility', '');
             if (sourceel._replacement) {
                 sourceel._replacement.parentNode.replaceChild(
@@ -353,7 +363,7 @@ if (kukit.yuidnd.base_library_present) {
 
         // find the destination element
         var destparent = Dom.get(id);
-        var destel = dom_getNearestChild(destparent, e.pageX, e.pageY);
+        var destel = dom_getNearestChild(destparent, this.getDragEl());
         if (this.allowed && destel.nodeName != sourceel.nodeName) {
             // this is only called for tr and li draggables (when this is
             // the caase, this.allowed is set, else it isn't)
@@ -362,6 +372,10 @@ if (kukit.yuidnd.base_library_present) {
             return;
         };
         this._destel = destel;
+        if (destel == sourceel ||
+                destel == dom_getNextElementSibling(sourceel)) {
+            return;
+        };
 
         // create a clone (space for droppable)
         var clone = sourceel.cloneNode(true);
