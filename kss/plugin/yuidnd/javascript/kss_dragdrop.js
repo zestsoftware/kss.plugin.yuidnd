@@ -414,7 +414,7 @@ if (kukit.yuidnd.base_library_present) {
             function __bind_drag__(opers_by_eventname) {
         var groups = [];
         var config = {
-            action: 'ghost',
+            action: 'ghost'
         };
         var node;
         if (opers_by_eventname.dragstart) {
