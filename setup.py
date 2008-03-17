@@ -21,7 +21,7 @@ setup(name='kss.plugin.yuidnd',
       url='https://svn.plone.org/svn/collective/kss.plugin.yuidnd/trunk',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['kss.plugin'],
+      namespace_packages=['kss', 'kss.plugin'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
