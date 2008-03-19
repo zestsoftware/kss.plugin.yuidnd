@@ -17,7 +17,7 @@
       for="kss.demo.interfaces.ISimpleContent"
       template="kss_yuidnd_orderable_demo.pt"
       name="kss_yuidnd_orderable_demo.html"
-      permission="zope.View"
+      permission="zope2.View"
       />
 
   <browser:resource
@@ -31,4 +31,3 @@
     />
 
 </configure>
-
