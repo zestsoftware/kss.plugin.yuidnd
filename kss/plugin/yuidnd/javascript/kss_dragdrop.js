@@ -313,7 +313,10 @@ if (kukit.yuidnd.base_library_present) {
             if (sourceel._replacement) {
                 sourceel._replacement.parentNode.replaceChild(
                     sourceel, sourceel._replacement);
-                delete sourceel._replacement;
+                // XXX: delete fails on the node on IE 
+                // (Object does not support this operation)
+                //delete sourceel._replacement;
+                sourceel._replacement = null;
             };
             var point = ddm.interactionInfo.point;
             var region = yutil.Region.getRegion(sourceel);
