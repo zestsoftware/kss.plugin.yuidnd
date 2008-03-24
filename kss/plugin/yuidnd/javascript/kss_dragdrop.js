@@ -150,9 +150,24 @@ if (kukit.yuidnd.base_library_present) {
         droppable.isEmpty = false;
         var parms = {};
         if (this.config.action == 'order') {
-            // It is essential to also check for the parentnode,
-            // and if it does not exist, just append the child.
-            if (targetel && targetel.parentNode) {
+            // XXX Sometimes targetel is not in the droppable.
+            // This is obviously a problem with its selection
+            // and it observably in FF2 and IE6 when dropping the last element
+            // to itself, not into the empty landing box but slightly above it. 
+            // In these cases I observed (on FF) targetel to be
+            // an empty <div style="height: 0px">, (on IE( a <div/>). 
+            // The only sensible workarounf here is to do an append 
+            // to the end of the container,
+            // which is, by chance, also what we expect to happen.
+            // XXX if we fail to do this quirk, the following would happen:
+            // - on FF2 we get 'parentNode has no properties' js error,
+            // - on IE6, we get no error but the dropped node gracelessly disappear.
+            if (targetel && targetel.parentNode != droppable) {
+                kukit.logWarning('Oops, yuidnd wanted to drop before a foul target element. I log it to the next line for diagnosis:');
+                kukit.logDebug(targetel);
+                targetel = null;
+            }
+            if (targetel) {
                 targetel.parentNode.insertBefore(el, targetel);
             } else {
                 droppable.appendChild(el);
