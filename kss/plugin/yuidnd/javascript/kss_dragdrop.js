@@ -281,12 +281,28 @@ if (kukit.yuidnd.base_library_present) {
         var self = this;
         motion.onComplete.subscribe(
             function onMotionComplete() {
+                // We must not only make the drag element hidden,
+                // we must also delete its content.
+                // because certain elements like input fields
+                // and buttons would remain visible on FireFox
                 Dom.setStyle(dragel, 'visibility', 'hidden');
+                while (dragel.hasChildNodes()) {
+                    dragel.removeChild(dragel.firstChild);
+                    }
                 Dom.setStyle(sourceel, 'visibility', '');
                 if (sourceel._replacement) {
+                    // This happens when there was no dropping:
+                    // that is the dragged element moves back to its
+                    // original place. 
+                    // In the other case: if the drag has been succeeded,
+                    // the removal would have been taken place
+                    // from onDragDrop, already.
                     sourceel._replacement.parentNode.replaceChild(
                         sourceel, sourceel._replacement);
-                    delete sourceel._replacement;
+                    // XXX: delete fails on the node on IE 
+                    // (Object does not support this operation)
+                    //delete sourceel._replacement;
+                    sourceel._replacement = null;
                 };
                 if (self.config.action == 'ghost') {
                     Dom.removeClass(sourceel,
