@@ -150,7 +150,9 @@ if (kukit.yuidnd.base_library_present) {
         droppable.isEmpty = false;
         var parms = {};
         if (this.config.action == 'order') {
-            if (targetel) {
+            // It is essential to also check for the parentnode,
+            // and if it does not exist, just append the child.
+            if (targetel && targetel.parentNode) {
                 targetel.parentNode.insertBefore(el, targetel);
             } else {
                 droppable.appendChild(el);
