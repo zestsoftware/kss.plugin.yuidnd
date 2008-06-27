@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.1'
+version = '0.6'
 
 setup(name='kss.plugin.yuidnd',
       version=version,
@@ -16,8 +16,8 @@ setup(name='kss.plugin.yuidnd',
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='kss plugin drag-and-drop',
-      author='Jean-Paul Ladage',
-      author_email='j.ladage@zestsoftware.nl',
+      author='Guido Wesdorp',
+      author_email='guido@pragmagik.com',
       url='https://svn.plone.org/svn/collective/kss.plugin.yuidnd/trunk',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
