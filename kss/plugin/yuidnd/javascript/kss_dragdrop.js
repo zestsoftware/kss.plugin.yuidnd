@@ -250,6 +250,9 @@ if (kukit.yuidnd.base_library_present) {
                   ', ' + y + ')');
         var dragel = this.getDragEl();
         var sourceel = this.getEl();
+        if (!sourceel || !sourceel.parentNode) {
+            return;
+        };
 
         // XXX perhaps using cloneNode() yields better results here, but not
         // in all browsers obviously :|
@@ -307,7 +310,7 @@ if (kukit.yuidnd.base_library_present) {
                     dragel.removeChild(dragel.firstChild);
                     }
                 Dom.setStyle(sourceel, 'visibility', '');
-                if (sourceel._replacement) {
+                if (sourceel._replacement && sourceel._replacement.parentNode) {
                     // This happens when there was no dropping:
                     // that is the dragged element moves back to its
                     // original place. 
@@ -343,7 +346,7 @@ if (kukit.yuidnd.base_library_present) {
         if (ddm.interactionInfo.drop.length == 1) {
             var sourceel = this.getEl();
             Dom.setStyle(sourceel, 'visibility', '');
-            if (sourceel._replacement) {
+            if (sourceel._replacement && sourceel._replacement.parentNode) {
                 sourceel._replacement.parentNode.replaceChild(
                     sourceel, sourceel._replacement);
                 // XXX: delete fails on the node on IE 
