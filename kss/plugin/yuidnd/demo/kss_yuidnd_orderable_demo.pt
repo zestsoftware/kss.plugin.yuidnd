@@ -19,34 +19,54 @@
 
     <h2>Drag and drop demo: Sortables</h2>
 
-    <div id="content">
-    <div style="height:200px;">
+    <div id="content" style="height:300px;">
     <div style="float:left;">
-    <h3>This is the first list</h3>
-     <ul class="draggable-container" id="firstlist" style="min-height:150px;width:200px;">
-       <li class="draggable-green" id="l1li1">Item 1 from first list.</li>
-       <li class="draggable-green" id="l1li2">Item 2 from first list.</li>
-       <li class="draggable-green" id="l1li3">Item 3 from first list.</li>
-     </ul>
+      <h3>This is the first list</h3>
+      <ul class="draggable-container" id="firstlist" style="min-height:150px;width:200px;">
+        <li class="draggable-green" id="l1li1">Item 1 from first list.</li>
+        <li class="draggable-green" id="l1li2">Item 2 from first list.</li>
+        <li class="draggable-green" id="l1li3">Item 3 from first list.</li>
+      </ul>
     </div>
-     <div style="float:left;">
-     <h3>And now the second list</h3>
-     <ul class="draggable-container" id="secondlist" style="min-height:150px;width:200px;">
-       <li class="nondraggable-orange" id="l2li1">
-         Non-draggable item in second list
-       </li>
-       <li class="draggable-orange" id="l2li">
-         <span class="handle" id="handle1">DRAG HERE</span> Item 1 from second list.
-       </li>
-       <li class="draggable-orange" id="l2li3">
-         <span class="handle" id="handle2">DRAG HERE</span> Item 2 from second list.
-       </li>
-       <li class="draggable-orange" id="l2li4">
-         <span class="handle" id="handle3">DRAG HERE</span> Item 3 from second list.
-       </li>
-     </ul>
+    <div style="float:left;">
+      <h3>And now the second list</h3>
+      <ul class="draggable-container" id="secondlist" style="min-height:150px;width:200px;">
+        <li class="nondraggable-orange" id="l2li1">
+          Non-draggable item in second list
+        </li>
+        <li class="draggable-orange" id="l2li">
+          <span class="handle" id="handle1">DRAG HERE</span> Item 1 from second list.
+        </li>
+        <li class="draggable-orange" id="l2li3">
+          <span class="handle" id="handle2">DRAG HERE</span> Item 2 from second list.
+        </li>
+        <li class="draggable-orange" id="l2li4">
+          <span class="handle" id="handle3">DRAG HERE</span> Item 3 from second list.
+        </li>
+      </ul>
     </div>
+    <div style="float:left;">    
+      <h3>Ordering rows in a table</h3>
+      <table id="orderable-table" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+          <th>Header 1</th>
+          <th>Header 2</th>
+        </tr>
+        <tr class="draggable-row" id="row1">
+          <td>Row 1 Data 1</td>
+          <td>Row 1 Data 2</td>
+        </tr>
+        <tr class="draggable-row" id="row2">
+          <td>Row 2 Data 1</td>
+          <td>Row 2 Data 2</td>
+        </tr>
+          <tr class="draggable-row" id="row3">
+            <td>Row 3 Data 1</td>
+            <td>Row 3 Data 2</td>
+        </tr>
+      </table>
     </div>
+    
     </div>
 
 

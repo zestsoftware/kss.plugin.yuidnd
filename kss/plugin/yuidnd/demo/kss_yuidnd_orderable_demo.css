@@ -59,3 +59,15 @@ span.handle {
     border-style: solid;
     border: 1px dotted gray;
 }
+
+table {
+    border: 1px solid #E8A400;
+}
+th {
+    background-color:#FFF4D8;
+    border: 1px solid #E8A400;    
+}
+td {
+    border: 1px solid #E8A400;        
+}
+
