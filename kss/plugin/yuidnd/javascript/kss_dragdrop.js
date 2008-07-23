@@ -164,9 +164,10 @@ if (kukit.yuidnd.base_library_present) {
             // - on IE6, we get no error but the dropped node gracelessly disappear.
             if (targetel && targetel.parentNode != droppable) {
                 kukit.logWarning('Oops, yuidnd wanted to drop before a foul target element. I log it to the next line for diagnosis:');
-                kukit.logDebug(targetel);
                 targetel = null;
-            }
+            };
+            kukit.logDebug('targetel: ' + targetel +
+                           ', droppable: ' + droppable);
             if (targetel) {
                 targetel.parentNode.insertBefore(el, targetel);
             } else {
@@ -202,6 +203,17 @@ if (kukit.yuidnd.base_library_present) {
         if (executableAction) {
             executableAction({defaultParameters: parms});
         };
+    };
+
+    Droppable.prototype.getEl = function getEl() {
+        var el = yutil.DDTarget.prototype.getEl.apply(this, arguments);
+        if (el.nodeName.toLowerCase() == 'table') {
+            var tbody = el.getElementsByTagName('tbody')[0];
+            if (tbody) {
+                return tbody;
+            };
+        };
+        return el;
     };
 
     var Draggable = kukit.yuidnd.Draggable = function Draggable() {
@@ -285,6 +297,7 @@ if (kukit.yuidnd.base_library_present) {
         */
         kukit.log('end drag ' + this.id);
         if (this._order_clone) {
+            Dom.setStyle(this._order_clone, 'display', 'none');
             this._order_clone.parentNode.removeChild(this._order_clone);
             delete this._order_clone;
         };
@@ -405,7 +418,7 @@ if (kukit.yuidnd.base_library_present) {
         var destel = dom_getNearestChild(destparent, this.getDragEl());
         if (this.allowed && destel.nodeName != sourceel.nodeName) {
             // this is only called for tr and li draggables (when this is
-            // the caase, this.allowed is set, else it isn't)
+            // the case, this.allowed is set, else it isn't)
             kukit.logWarning('destel ' + destel.nodeName + ' not of type' +
                              sourceel.nodeName);
             return;
@@ -419,18 +432,22 @@ if (kukit.yuidnd.base_library_present) {
         // create a clone (space for droppable)
         var clone = sourceel.cloneNode(true);
         Dom.setStyle(clone, 'visibility', '');
-        var borderdiv = sourceel.ownerDocument.createElement('div');
-        borderdiv.appendChild(clone);
-        Dom.addClass(borderdiv, (this.config.cloneBorderClass ||
-                                 'kss-dragdrop-clone-border'));
         Dom.addClass(clone, (this.config.cloneClass || 'kss-dragdrop-clone'));
-        this._order_clone = borderdiv;
+        var addel = clone;
+        if (clone.nodeName.toLowerCase() != 'tr') {
+            var borderdiv = sourceel.ownerDocument.createElement('div');
+            borderdiv.appendChild(clone);
+            Dom.addClass(borderdiv, (this.config.cloneBorderClass ||
+                                     'kss-dragdrop-clone-border'));
+            addel = borderdiv;
+        };
+        this._order_clone = addel;
 
         // add the clone
         if (destel) {
-            destparent.insertBefore(borderdiv, destel);
+            destparent.insertBefore(addel, destel);
         } else {
-            destparent.appendChild(borderdiv);
+            destparent.appendChild(addel);
         };
 
         Dom.removeClass(clone,

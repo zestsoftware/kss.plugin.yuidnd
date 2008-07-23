@@ -47,23 +47,27 @@
     </div>
     <div style="float:left;">    
       <h3>Ordering rows in a table</h3>
-      <table id="orderable-table" border="0" cellspacing="0" cellpadding="3">
-        <tr>
-          <th>Header 1</th>
-          <th>Header 2</th>
-        </tr>
-        <tr class="draggable-row" id="row1">
-          <td>Row 1 Data 1</td>
-          <td>Row 1 Data 2</td>
-        </tr>
-        <tr class="draggable-row" id="row2">
-          <td>Row 2 Data 1</td>
-          <td>Row 2 Data 2</td>
-        </tr>
-          <tr class="draggable-row" id="row3">
-            <td>Row 3 Data 1</td>
-            <td>Row 3 Data 2</td>
-        </tr>
+      <table border="0" cellspacing="0" cellpadding="3">
+        <thead>
+          <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+          </tr>
+        </thead>
+        <tbody id="orderable-table">
+          <tr class="draggable-row" id="row1">
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+          </tr>
+          <tr class="draggable-row" id="row2">
+            <td>Row 2 Data 1</td>
+            <td>Row 2 Data 2</td>
+          </tr>
+            <tr class="draggable-row" id="row3">
+              <td>Row 3 Data 1</td>
+              <td>Row 3 Data 2</td>
+          </tr>
+        </tbody>
       </table>
     </div>
     
