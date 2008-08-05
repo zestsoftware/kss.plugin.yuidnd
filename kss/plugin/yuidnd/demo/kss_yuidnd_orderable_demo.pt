@@ -68,6 +68,9 @@
               <td>Row 3 Data 2</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr><td colspan="2">Footer</td></tr>
+        </tfoot>
       </table>
     </div>
     
