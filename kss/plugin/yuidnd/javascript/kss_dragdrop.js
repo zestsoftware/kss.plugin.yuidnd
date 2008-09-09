@@ -17,7 +17,7 @@
  * 02111-1307, USA.
  */
 
-/* 
+/*
  * YUI drag and drop support (yuidnd)
  *
  */
@@ -60,7 +60,7 @@ if (kukit.yuidnd.base_library_present) {
 
     function dom_replaceContent(parentNode) {
         /* replace the content of a node
-        
+
             removes all nodes from parentNode and then adds every additional
             argument (which are assumed to be nodes too)
         */
@@ -153,10 +153,10 @@ if (kukit.yuidnd.base_library_present) {
             // XXX Sometimes targetel is not in the droppable.
             // This is obviously a problem with its selection
             // and it observably in FF2 and IE6 when dropping the last element
-            // to itself, not into the empty landing box but slightly above it. 
+            // to itself, not into the empty landing box but slightly above it.
             // In these cases I observed (on FF) targetel to be
-            // an empty <div style="height: 0px">, (on IE( a <div/>). 
-            // The only sensible workarounf here is to do an append 
+            // an empty <div style="height: 0px">, (on IE( a <div/>).
+            // The only sensible workarounf here is to do an append
             // to the end of the container,
             // which is, by chance, also what we expect to happen.
             // XXX if we fail to do this quirk, the following would happen:
@@ -175,7 +175,7 @@ if (kukit.yuidnd.base_library_present) {
             };
             parms['dropContainerId'] = droppable.id;
             var currentIndex = -1;
-            var dropIndex = -1
+          var dropIndex = -1;
             for (var i=0; i < droppable.childNodes.length; i++) {
                 var child = droppable.childNodes[i];
                 // this needs to check if the element is a draggable, too
@@ -280,7 +280,7 @@ if (kukit.yuidnd.base_library_present) {
             Dom.addClass(sourceel,
                          (this.config.ghostClass || 'kss-dragdrop-ghost'));
         };
-        
+
         // XXX can we somehow copy styles here? :|
         Dom.addClass(dragel,
                      (this.config.draggingClass || 'kss-dragdrop-dragging'));
@@ -326,13 +326,13 @@ if (kukit.yuidnd.base_library_present) {
                 if (sourceel._replacement && sourceel._replacement.parentNode) {
                     // This happens when there was no dropping:
                     // that is the dragged element moves back to its
-                    // original place. 
+                    // original place.
                     // In the other case: if the drag has been succeeded,
                     // the removal would have been taken place
                     // from onDragDrop, already.
                     sourceel._replacement.parentNode.replaceChild(
                         sourceel, sourceel._replacement);
-                    // XXX: delete fails on the node on IE 
+                    // XXX: delete fails on the node on IE
                     // (Object does not support this operation)
                     //delete sourceel._replacement;
                     sourceel._replacement = null;
@@ -362,7 +362,7 @@ if (kukit.yuidnd.base_library_present) {
             if (sourceel._replacement && sourceel._replacement.parentNode) {
                 sourceel._replacement.parentNode.replaceChild(
                     sourceel, sourceel._replacement);
-                // XXX: delete fails on the node on IE 
+                // XXX: delete fails on the node on IE
                 // (Object does not support this operation)
                 //delete sourceel._replacement;
                 sourceel._replacement = null;
@@ -385,7 +385,7 @@ if (kukit.yuidnd.base_library_present) {
 
     Draggable.prototype.onDragOver = function onDragOver(e, id) {
         /* make place for the element to add it
-        
+
             this is only used for ordered draggables
 
             note that the current behaviour is a bit strange: as soon as room
@@ -457,7 +457,7 @@ if (kukit.yuidnd.base_library_present) {
 
     Draggable.prototype.is_not_allowed =
             function is_not_allowed(sourceel, droppable) {
-        return droppable.allowed && 
+        return droppable.allowed &&
                 array_indexOf(droppable.allowed,
                               sourceel.nodeName.toLowerCase()) == -1;
     };
@@ -569,7 +569,7 @@ if (kukit.yuidnd.base_library_present) {
         });
 
         bindoper.evalInt('padding');
-        bindoper.evalBool('maintainOffset')
+        bindoper.evalBool('maintainOffset');
         bindoper.evalBool('primaryButtonOnly');
 
         // copy some of the params to config
