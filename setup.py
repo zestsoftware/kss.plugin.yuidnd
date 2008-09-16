@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.7'
+version = '0.8 (svn/devel)'
 descfile = open(os.path.join('kss', 'plugin', 'yuidnd', 'README.txt'))
 desc = descfile.read().strip()
 descfile.close()
