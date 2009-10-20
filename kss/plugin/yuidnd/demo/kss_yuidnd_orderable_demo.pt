@@ -11,7 +11,7 @@
 
     <metal:header use-macro="context/@@header_macros/header_resources" />
 
-    
+
   </head>
   <body>
     <p metal:use-macro="context/@@body_macros/header">header</p>
@@ -45,7 +45,7 @@
         </li>
       </ul>
     </div>
-    <div style="float:left;">    
+    <div style="float:left;">
       <h3>Ordering rows in a table</h3>
       <table border="0" cellspacing="0" cellpadding="3">
         <thead>
@@ -73,7 +73,7 @@
         </tfoot>
       </table>
     </div>
-    
+
     </div>
 
 

@@ -3,7 +3,7 @@
      xmlns:kss="http://namespaces.zope.org/kss"
      xmlns:zcml="http://namespaces.zope.org/zcml"
      >
-     
+
     <!-- Including this configuration
          will activate this plugin inside zope.
     -->
@@ -39,22 +39,22 @@
         />
 
    <!-- Event types -->
-  
+
     <kss:eventtype
         name="yuidnd-drop"
         jsfile="javascript/kss_dragdrop.js"
         />
-  
+
     <kss:eventtype
         name="yuidnd-dragstart"
         jsfile="javascript/kss_dragdrop.js"
         />
-  
+
     <kss:eventtype
         name="yuidnd-dragsuccess"
         jsfile="javascript/kss_dragdrop.js"
         />
-  
+
     <kss:eventtype
         name="yuidnd-dragfailure"
         jsfile="javascript/kss_dragdrop.js"

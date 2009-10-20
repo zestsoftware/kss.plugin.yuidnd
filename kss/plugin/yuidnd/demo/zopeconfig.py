@@ -8,7 +8,7 @@ from kss.demo.resource import (
     KSSSeleniumTestDirectory,
     )
 from zope.interface import implements
-     
+
 # Create a mesh of provided interfaces
 # This is needed, because an utility must have a single interface.
 class IResource(IKSSDemoResource, IKSSSeleniumTestResource):
@@ -21,7 +21,7 @@ class KSSDemos(object):
     implements(IResource)
 
     demos = (
-        # List your demos here. 
+        # List your demos here.
         # (Second parameter can be a subcategory within the demo if needed.)
         KSSDemo('yuidnd', '', 'kss_yuidnd_orderable_demo.html', 'Yahoo UI Library drag and drop Draggables'),
         )
