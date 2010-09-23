@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.8 (svn/devel)'
+version = '0.8dev'
 descfile = open(os.path.join('kss', 'plugin', 'yuidnd', 'README.txt'))
 desc = descfile.read().strip()
 descfile.close()
@@ -11,7 +11,6 @@ setup(name='kss.plugin.yuidnd',
       version=version,
       description="A plugin for KSS that provides drag-and-drop based on yahoo.ui",
       long_description=desc,
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Framework :: Plone",
         "Framework :: Zope2",
@@ -30,9 +29,9 @@ setup(name='kss.plugin.yuidnd',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
       ],
       entry_points="""
-      # -*- Entry points: -*-
+      [z3c.autoinclude.plugin]
+      target = plone
       """,
       )
