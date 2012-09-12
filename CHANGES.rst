@@ -2,7 +2,7 @@ Changelog for kss.plugin/yuidnd
 ===============================
 
 
-1.1 (unreleased)
+1.1 (2012-09-12)
 ----------------
 
 - Moved to github: https://github.com/zestsoftware/kss.plugin.yuidnd

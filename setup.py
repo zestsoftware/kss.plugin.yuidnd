@@ -4,7 +4,7 @@ desc = open('README.txt').read().strip()
 history = open('CHANGES.rst').read().strip()
 
 setup(name='kss.plugin.yuidnd',
-      version='1.1.dev0',
+      version='1.1',
       description="A plugin for KSS that provides drag-and-drop based on yahoo.ui",
       long_description=desc + '\n\n' + history,
       classifiers=[
