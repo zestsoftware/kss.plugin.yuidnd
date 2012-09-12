@@ -1,27 +1,22 @@
 from setuptools import setup, find_packages
-import os
 
-version = '1.1dev'
-descfile = open(os.path.join('kss', 'plugin', 'yuidnd', 'README.txt'))
-desc = descfile.read().strip()
-descfile.close()
-
+desc = open('README.txt').read().strip()
 
 setup(name='kss.plugin.yuidnd',
-      version=version,
+      version='1.1.dev0',
       description="A plugin for KSS that provides drag-and-drop based on yahoo.ui",
       long_description=desc,
       classifiers=[
-        "Framework :: Plone",
-        "Framework :: Zope2",
-        "Framework :: Zope3",
-        "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        ],
+          "Framework :: Plone",
+          "Framework :: Zope2",
+          "Framework :: Zope3",
+          "Programming Language :: Python",
+          "Topic :: Software Development :: Libraries :: Python Modules",
+          ],
       keywords='kss plugin drag-and-drop',
       author='Jean-Paul Ladage',
       author_email='j.ladage@zestsoftware.nl',
-      url='https://svn.plone.org/svn/collective/kss.plugin.yuidnd/trunk',
+      url='https://plone.org/products/extreme-management-tool/',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['kss', 'kss.plugin'],
